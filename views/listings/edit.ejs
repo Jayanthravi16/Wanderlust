@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit your Listing</title>
-</head>
+<% layout("/layouts/boilerplate") %>
 <body>
     <form method="POST" action="/listings/<%= listing._id %>?_method=PUT">
         <input type="text" name="listing[title]" value="<%= listing.title %>">
@@ -22,4 +16,3 @@
         <button>Submit</button>
     </form>
 </body>
-</html>

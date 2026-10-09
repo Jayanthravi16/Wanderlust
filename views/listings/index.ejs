@@ -1,20 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WanderLust</title>
-</head>
+<% layout("/layouts/boilerplate") %>
 <body>
     <h3>All Listings</h2>
-    <form method="get" action="/listings/new">
+    <!-- <form method="get" action="/listings/new">
         <button>Create New Listing</button>
-    </form>
+    </form> -->
+    <% for (let listing of allListings){ %> 
+    <section class="card" style="max-width: 320px">
+        <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>">
+        <div class="card-body">
+            <h4 class="card-title">Card title</h4>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
+            <a href="#" class="btn-solid theme-primary">Go somewhere</a>
+        </div>
+    </section>
+    <% } %>
     <ul>
         <% for (let listing of allListings){ %> 
             <li><a href="/listings/<%= listing._id %>"><%= listing.title %></a></li>
         <% } %>
     </ul>
 </body>
-</html>
+
 
