@@ -1,7 +1,12 @@
 body {
   background-color: #ffffff;
   color: black;
+  font-family: "Plus Jakarta Sana", sans-serif !important;
 }
+
+/* h3 {
+    margin: 1rem auto 1rem 3.5rem;
+} */
 
 .navbar{
     height: 5rem;
@@ -48,4 +53,34 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     align-items: space-evenly;
+}
+
+/* Cards Styling */
+
+.card{
+    border: none !important;
+    background-color: white;
+    color: black;
+    margin-bottom: 2rem;
+
+}
+
+.card-img{
+    border: none !important;
+    border-radius: 1rem;
+    width: 100% !important;
+    object-fit: cover !important;
+}
+
+.card-body{
+    padding: 0 !important;
+}
+
+.card-text{
+    font-weight: 400;
+}
+
+.row {
+    display: flex !important;
+    justify-content: space-evenly;
 }

@@ -1,24 +1,21 @@
 <% layout("/layouts/boilerplate") %>
 <body>
-    <h3>All Listings</h2>
-    <!-- <form method="get" action="/listings/new">
-        <button>Create New Listing</button>
-    </form> -->
-    <% for (let listing of allListings){ %> 
-    <section class="card" style="max-width: 320px">
-        <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>">
-        <div class="card-body">
-            <h4 class="card-title">Card title</h4>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-            <a href="#" class="btn-solid theme-primary">Go somewhere</a>
-        </div>
-    </section>
-    <% } %>
-    <ul>
+
+    <h3>All Listings</h3>
+
+    <!-- row-cols-lg-3 strictly forces exactly 3 columns per row on large screens -->
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-1">
         <% for (let listing of allListings){ %> 
-            <li><a href="/listings/<%= listing._id %>"><%= listing.title %></a></li>
+            
+            <div class="card col" style="width: 20rem; cursor: pointer;" onclick="window.location.href='/listings/<%= listing._id %>'">
+                <img src="<%= listing.image.url %>" class="card-img" alt="<%= listing.image.filename %>" style="height: 20rem;">
+                <div class="card-body">                      
+                    <p class="card-text"> <b><%= listing.title %></b><br> <%= listing.price.toLocaleString("en-IN") %> / night</p>
+                </div>
+            </div>
+            </a>
+                
         <% } %>
-    </ul>
+    </div>
+
 </body>
-
-
