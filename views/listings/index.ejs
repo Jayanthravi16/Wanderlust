@@ -1,20 +1,19 @@
 <% layout("/layouts/boilerplate") %>
 <body>
 
-    <h3>All Listings</h3>
+    <h3 class="listings-heading">All Listings</h3>
 
-    <!-- row-cols-lg-3 strictly forces exactly 3 columns per row on large screens -->
-    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-1">
+    <div class="listings-grid">
         <% for (let listing of allListings){ %> 
-            
-            <div class="card col" style="width: 20rem; cursor: pointer;" onclick="window.location.href='/listings/<%= listing._id %>'">
-                <img src="<%= listing.image.url %>" class="card-img" alt="<%= listing.image.filename %>" style="height: 20rem;">
-                <div class="card-body">                      
-                    <p class="card-text"> <b><%= listing.title %></b><br> <%= listing.price.toLocaleString("en-IN") %> / night</p>
+            <a class="listing-card" href="/listings/<%= listing._id %>">
+                <div class="listing-card-image-wrap">
+                    <img src="<%= listing.image.url %>" class="listing-card-image" alt="<%= listing.image.filename %>">
+                    <div class="listing-card-overlay" aria-hidden="true"></div>
                 </div>
-            </div>
+                <div class="listing-card-body">
+                    <p class="listing-card-text"><b><%= listing.title %></b><br><%= listing.price.toLocaleString("en-IN") %> / night</p>
+                </div>
             </a>
-                
         <% } %>
     </div>
 

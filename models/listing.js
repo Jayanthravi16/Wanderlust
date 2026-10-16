@@ -11,8 +11,8 @@ const listingSchema = new Schema({
         filename: String,
         url: {
             type: String,
-            default: "https://unsplash.com/photos/glass-greenhouses-in-berkeley-sC_NIo8uH00",
-            set: (v) => v === "" ? "https://unsplash.com/photos/glass-greenhouses-in-berkeley-sC_NIo8uH00" : v,
+            default: "https://images.unsplash.com/photo-1790671083750-9fe6fac0db44?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
+            set: (v) => v === "" ? "https://images.unsplash.com/photo-1790671083750-9fe6fac0db44?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" : v,
         }
     },
     price: Number,
