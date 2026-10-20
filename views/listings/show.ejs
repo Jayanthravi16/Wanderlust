@@ -20,5 +20,81 @@
                 </div>
             </section>
         </article>
+        <section class="review-section" aria-labelledby="review-heading">
+            <div class="review-intro">
+                <h2 class="review-heading" id="review-heading">Leave a Review</h2>
+                <p class="review-description">Share what you thought about this place.</p>
+            </div>
+            <form class="review-form needs-validation" action="/listings/<%= listing.id %>/reviews" method="post" novalidate>
+                <div class="listing-field">
+                    <span class="listing-label" id="review-rating-label">Rating</span>
+                    <div class="review-rating-options" role="radiogroup" aria-labelledby="review-rating-label" aria-describedby="review-rating-feedback">
+                        <% const ratingLabels = ["Bad", "Okay", "Good", "Very good", "Excellent"]; %>
+                        <% ratingLabels.forEach((label, index) => { %>
+                            <% const rating = index + 1; %>
+                            <label class="review-rating-choice" for="review-rating-<%= rating %>">
+                                <input
+                                    id="review-rating-<%= rating %>"
+                                    type="radio"
+                                    name="review[rating]"
+                                    value="<%= rating %>"
+                                    required
+                                >
+                                <span class="review-rating-choice-content">
+                                    <span class="review-rating-choice-label"><%= label %></span>
+                                    <span class="review-rating-star" aria-hidden="true">★</span>
+                                </span>
+                            </label>
+                        <% }); %>
+                    </div>
+                    <div id="review-rating-feedback" class="invalid-feedback">Please select a rating from 1 to 5.</div>
+                </div>
+                <div class="listing-field">
+                    <label for="review-comment" class="listing-label">Comments</label>
+                    <textarea id="review-comment" name="review[comment]" class="form-control listing-input listing-textarea review-comment" placeholder="Tell us about your experience" required></textarea>
+                    <div class="invalid-feedback">Please enter a comment.</div>
+                </div>
+                <button class="listing-submit" type="submit">Submit Review</button>
+            </form>
+        </section>
+        <section class="reviews-section" aria-labelledby="all-reviews-heading">
+            <div class="reviews-section-heading">
+                <div>
+                    <h2 class="review-heading" id="all-reviews-heading">Guest reviews</h2>
+                    <p class="review-description">
+                        <%= listing.reviews.length %> <%= listing.reviews.length === 1 ? "review" : "reviews" %>
+                    </p>
+                </div>
+            </div>
+
+            <% if (listing.reviews.length) { %>
+                <div class="reviews-grid">
+                    <% for (const review of listing.reviews) { %>
+                        <article class="review-card">
+                            <header class="review-card-header">
+                                <div class="review-author-avatar" aria-hidden="true">J</div>
+                                <div class="review-author-details">
+                                    <h3 class="review-author-name">Jane Doe</h3>
+                                    <div class="review-card-rating" role="img" aria-label="<%= review.rating %> out of 5 stars">
+                                        <% for (let star = 1; star <= 5; star++) { %>
+                                            <span class="<%= star <= review.rating ? "review-card-star is-filled" : "review-card-star" %>" aria-hidden="true">★</span>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </header>
+                            <p class="review-card-comment"><%= review.comment %></p>
+                            <form class="review-card-delete-form" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                                <button class="review-card-delete" type="submit" aria-label="Delete review by Jane Doe">Delete review</button>
+                            </form>
+                        </article>
+                    <% } %>
+                </div>
+            <% } else { %>
+                <div class="reviews-empty-state">
+                    <span class="reviews-empty-icon" aria-hidden="true">★</span>
+                    <p>No reviews yet. Be the first to share your experience.</p>
+                </div>
+            <% } %>
+        </section>
     </main>
 </body>

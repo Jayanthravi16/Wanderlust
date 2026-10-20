@@ -33,4 +33,29 @@
       })
     })
   })
+
+  const ratingOptions = document.querySelectorAll('.review-rating-choice')
+
+  if (ratingOptions.length > 0) {
+    const updateRating = () => {
+      const selectedRating = document.querySelector('input[name="review[rating]"]:checked')
+
+      if (!selectedRating) return
+
+      const rating = Number(selectedRating.value)
+
+      ratingOptions.forEach((option, index) => {
+        const optionRating = Number(option.querySelector('input').value)
+
+        option.classList.toggle('is-selected', optionRating === rating)
+        option.classList.toggle('is-lit', optionRating <= rating)
+      })
+    }
+
+    document.querySelectorAll('input[name="review[rating]"]').forEach(input => {
+      input.addEventListener('change', updateRating)
+    })
+
+    updateRating()
+  }
 })()
