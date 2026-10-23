@@ -8,6 +8,8 @@ const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const listingsRouter = require("./routes/listing.js");
 const reviewsRouter = require("./routes/review.js");
+const session = require("express-session");
+const flash = require("connect-flash");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -30,8 +32,29 @@ async function main() {
   await mongoose.connect(MONGO_URL);
 }
 
+const sessionOptions = {
+  secret : "mysupersecretcode",
+  resave : false,
+  saveUninitialized : true,
+  cookie: {
+    expires : Date.now() + 7 *24 *60*60*1000, // 7 days time in milliseconds
+    maxAge : 7*24*60*60*1000,
+    httpOnly : true,
+  },
+};
+
 app.get("/", (req, res) => {
   res.send("I am groot");
+});
+
+// Keep in mind that the routes will always come after flash. else the flash won't work.
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.use((req, res, next)=>{
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
 });
 
 app.use("/listings", listingsRouter);

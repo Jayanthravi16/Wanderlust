@@ -11,6 +11,120 @@ body {
     flex: 1;
 }
 
+.flash-stack {
+    display: grid;
+    gap: 0.75rem;
+    width: min(100%, 46rem);
+    margin: 1.25rem auto;
+}
+
+.flash-message {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid #cfe8d8;
+    border-left: 0.3rem solid #35a66f;
+    border-radius: 0.75rem;
+    background: linear-gradient(110deg, #f0faf4, #ffffff 75%);
+    color: #245d3c;
+    box-shadow: 0 0.35rem 1.1rem rgb(34 75 49 / 8%);
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.flash-message.is-dismissing {
+    opacity: 0;
+    transform: translateY(-0.35rem);
+}
+
+.flash-message-error {
+    border-color: #f1c6c9;
+    border-left-color: #dc3545;
+    background: linear-gradient(110deg, #fff1f2, #ffffff 75%);
+    color: #842029;
+    box-shadow: 0 0.35rem 1.1rem rgb(132 32 41 / 8%);
+}
+
+.flash-message-icon {
+    display: grid;
+    flex: 0 0 1.8rem;
+    width: 1.8rem;
+    height: 1.8rem;
+    place-items: center;
+    border-radius: 50%;
+    background-color: #d9f1e2;
+    color: #258552;
+}
+
+.flash-message-icon svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.5;
+}
+
+.flash-message-error .flash-message-icon {
+    background-color: #fce1e3;
+    color: #c92a3a;
+}
+
+.flash-message-text {
+    flex: 1;
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.flash-message-dismiss {
+    display: grid;
+    flex: 0 0 2rem;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    place-items: center;
+    border: 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: #547360;
+    font: inherit;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.flash-message-error .flash-message-dismiss {
+    color: #9a5960;
+}
+
+.flash-message-dismiss:hover {
+    background-color: #e4f3e9;
+    color: #245d3c;
+}
+
+.flash-message-error .flash-message-dismiss:hover {
+    background-color: #fde3e5;
+    color: #842029;
+}
+
+.flash-message-dismiss:focus-visible {
+    outline: 2px solid #fe424d;
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .flash-message,
+    .flash-message-dismiss {
+        transition: none;
+    }
+}
+
 .navbar{
     height: 5rem;
     background-color: #ffffff;

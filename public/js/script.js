@@ -58,4 +58,16 @@
 
     updateRating()
   }
+
+  document.querySelectorAll('.flash-message-dismiss').forEach(button => {
+    button.addEventListener('click', () => {
+      const message = button.closest('.flash-message')
+
+      if (!message) return
+
+      message.classList.add('is-dismissing')
+      message.addEventListener('transitionend', () => message.remove(), { once: true })
+      window.setTimeout(() => message.remove(), 220)
+    })
+  })
 })()
