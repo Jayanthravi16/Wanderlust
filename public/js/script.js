@@ -3,6 +3,18 @@
 
   const forms = document.querySelectorAll('.needs-validation')
 
+  const menuToggle = document.querySelector('.site-menu-toggle')
+  const navbarMenu = document.querySelector('#site-navbar-menu')
+
+  if (menuToggle && navbarMenu) {
+    menuToggle.addEventListener('click', () => {
+      const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true'
+      menuToggle.setAttribute('aria-expanded', String(!isExpanded))
+      menuToggle.setAttribute('aria-label', isExpanded ? 'Open navigation menu' : 'Close navigation menu')
+      navbarMenu.classList.toggle('is-open', !isExpanded)
+    })
+  }
+
   forms.forEach(form => {
     const controls = form.querySelectorAll('input, select, textarea')
 
