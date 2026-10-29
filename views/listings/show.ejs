@@ -9,23 +9,27 @@
             >
             <section class="listing-detail-content" aria-label="Listing information">
                 <h1 class="listing-detail-heading"><%= listing.title %></h1>
+                <p class="listing-detail-description">Owned by: <b><%= listing.owner ? listing.owner.username : "Owner unavailable" %></b></p>
                 <p class="listing-detail-description"><%= listing.description %></p>
                 <p class="listing-detail-price">&#8377;<%= listing.price.toLocaleString("en-IN") %> / night</p>
                 <p class="listing-detail-location"><%= listing.location %>, <%= listing.country %></p>
+            <% if (currUser && listing.owner && currUser._id.equals(listing.owner._id)) { %>
                 <div class="listing-detail-actions">
                     <a class="listing-action listing-action-edit" href="/listings/<%= listing._id %>/edit">Edit Listing</a>
                     <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
                         <button class="listing-action listing-action-delete" type="submit">Delete Listing</button>
                     </form>
                 </div>
+            <% } %>
             </section>
         </article>
         <section class="review-section" aria-labelledby="review-heading">
+            <% if (currUser) { %>
             <div class="review-intro">
                 <h2 class="review-heading" id="review-heading">Leave a Review</h2>
                 <p class="review-description">Share what you thought about this place.</p>
             </div>
-            <form class="review-form needs-validation" action="/listings/<%= listing.id %>/reviews" method="post" novalidate>
+            <form class="review-form needs-validation" action="/listings/<%= listing._id %>/reviews" method="post" novalidate>
                 <div class="listing-field">
                     <span class="listing-label" id="review-rating-label">Rating</span>
                     <div class="review-rating-options" role="radiogroup" aria-labelledby="review-rating-label" aria-describedby="review-rating-feedback">
@@ -56,6 +60,15 @@
                 </div>
                 <button class="listing-submit" type="submit">Submit Review</button>
             </form>
+            <% } else { %>
+                <div class="review-signin-prompt">
+                    <div>
+                        <h2 class="review-heading" id="review-heading">Want to leave a review?</h2>
+                        <p class="review-description">Sign in to share your experience with this place.</p>
+                    </div>
+                    <a class="review-signin-link" href="/login">Sign in</a>
+                </div>
+            <% } %>
         </section>
         <section class="reviews-section" aria-labelledby="all-reviews-heading">
             <div class="reviews-section-heading">
@@ -72,9 +85,9 @@
                     <% for (const review of listing.reviews) { %>
                         <article class="review-card">
                             <header class="review-card-header">
-                                <div class="review-author-avatar" aria-hidden="true">J</div>
+                                <div class="review-author-avatar" aria-hidden="true"><%= review.author && review.author.username ? review.author.username.charAt(0).toUpperCase() : "G" %></div>
                                 <div class="review-author-details">
-                                    <h3 class="review-author-name">Jane Doe</h3>
+                                    <h3 class="review-author-name"><%= review.author ? review.author.username : "Guest" %></h3>
                                     <div class="review-card-rating" role="img" aria-label="<%= review.rating %> out of 5 stars">
                                         <% for (let star = 1; star <= 5; star++) { %>
                                             <span class="<%= star <= review.rating ? "review-card-star is-filled" : "review-card-star" %>" aria-hidden="true">★</span>
@@ -83,9 +96,11 @@
                                 </div>
                             </header>
                             <p class="review-card-comment"><%= review.comment %></p>
-                            <form class="review-card-delete-form" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
-                                <button class="review-card-delete" type="submit" aria-label="Delete review by Jane Doe">Delete review</button>
-                            </form>
+                            <% if (currUser && review.author && currUser._id.equals(review.author._id)) { %>
+                                <form class="review-card-delete-form" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                                    <button class="review-card-delete" type="submit" aria-label="Delete review by <%= review.author.username %>">Delete review</button>
+                                </form>
+                            <% } %>
                         </article>
                     <% } %>
                 </div>
@@ -96,5 +111,16 @@
                 </div>
             <% } %>
         </section>
+        <section class="listing-map-section" aria-labelledby="listing-map-heading">
+            <h2 class="listing-map-heading" id="listing-map-heading">Where you'll be</h2>
+            <div
+                id="map"
+                class="listing-map"
+                data-map-token="<%= mapToken %>"
+                data-coordinates="<%= JSON.stringify(listing.geometry.coordinates) %>"
+                data-listing-location="<%= listing.location %>"
+            ></div>
+        </section>
     </main>
+    <script src="/js/map.js"></script>
 </body>

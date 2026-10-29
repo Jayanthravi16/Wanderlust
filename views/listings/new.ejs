@@ -2,7 +2,7 @@
 <body>
     <main class="listing-form-page">
         <h3 class="listing-form-heading">Create a New Listing</h3>
-        <form class="listing-form needs-validation" method="POST" action="/listings" novalidate>
+        <form class="listing-form needs-validation" method="POST" action="/listings" novalidate enctype="multipart/form-data">
             <div class="listing-field">
                 <label for="listing-title" class="listing-label">Title</label>
                 <input id="listing-title" type="text" class="form-control listing-input" name="listing[title]" placeholder="Enter a listing title" required>
@@ -14,9 +14,9 @@
                 <div class="invalid-feedback">Please enter a description.</div>
             </div>
             <div class="listing-field">
-                <label for="listing-image" class="listing-label">Image URL</label>
-                <input id="listing-image" type="url" name="listing[image][url]" placeholder="https://example.com/image.jpg" class="form-control listing-input" required>
-                <div class="invalid-feedback">Please enter a valid image URL.</div>
+                <label for="listing-image" class="listing-label">Upload Image</label>
+                <input id="listing-image" type="file" name="listing[image]" accept="image/jpeg,image/png,image/gif,image/webp,image/avif" class="form-control listing-input" required>
+                <div class="invalid-feedback">Please upload a JPEG, PNG, GIF, WebP, or AVIF image (5 MB maximum).</div>
             </div>
             <div class="listing-field-row">
                 <div class="listing-field">

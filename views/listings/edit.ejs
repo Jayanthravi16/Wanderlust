@@ -2,7 +2,7 @@
 <body>
     <main class="listing-form-page">
         <h3 class="listing-form-heading">Edit Listing</h3>
-        <form class="listing-form needs-validation" method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate>
+        <form class="listing-form needs-validation" method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate enctype="multipart/form-data">
             <div class="listing-field">
                 <label for="listing-title" class="listing-label">Title</label>
                 <input id="listing-title" type="text" class="form-control listing-input" name="listing[title]" value="<%= listing.title %>" required>
@@ -14,9 +14,19 @@
                 <div class="invalid-feedback">Please enter a description.</div>
             </div>
             <div class="listing-field">
-                <label for="listing-image" class="listing-label">Image URL</label>
-                <input id="listing-image" type="url" name="listing[image][url]" value="<%= listing.image.url %>" class="form-control listing-input" required>
-                <div class="invalid-feedback">Please enter a valid image URL.</div>
+                <span class="listing-label">Current image</span>
+                <div class="listing-image-preview">
+                    <img
+                        class="listing-image-preview-img"
+                        src="<%= listing.image.url %>"
+                        alt="Current image for <%= listing.title %>"
+                    >
+                </div>
+            </div>
+            <div class="listing-field">
+                <label for="listing-image" class="listing-label">Replace Image (optional)</label>
+                <input id="listing-image" type="file" name="listing[image]" accept="image/jpeg,image/png,image/gif,image/webp,image/avif" class="form-control listing-input">
+                <div class="listing-label">Leave empty to keep the current image.</div>
             </div>
             <div class="listing-field-row">
                 <div class="listing-field">
