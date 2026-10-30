@@ -137,7 +137,7 @@ body {
 .site-navbar-inner {
     display: grid;
     width: min(100% - 3rem, 82rem);
-    grid-template-columns: minmax(0, 1fr) minmax(18rem, 32rem) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 27rem) minmax(0, 1fr);
     min-height: 4.75rem;
     align-items: center;
     gap: clamp(1rem, 2vw, 2rem);
@@ -235,17 +235,19 @@ body {
 
 .site-navbar-menu {
     display: flex;
+    width: max-content;
     min-width: 0;
     align-items: center;
     justify-content: flex-end;
-    gap: clamp(1.75rem, 4vw, 3.5rem);
+    gap: clamp(1.25rem, 2vw, 1.75rem);
+    justify-self: end;
 }
 
 .site-nav-links {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: clamp(1.25rem, 2.5vw, 2.25rem);
+    gap: clamp(1.5rem, 2vw, 2rem);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -254,12 +256,14 @@ body {
 .site-nav-link {
     position: relative;
     display: inline-flex;
+    height: 4.75rem;
     min-height: 4.75rem;
     align-items: center;
     color: #514c46;
     font-size: 0.88rem;
     font-weight: 600;
     letter-spacing: 0.01em;
+    line-height: 1;
     text-decoration: none;
     transition: color 150ms ease;
 }
@@ -277,7 +281,7 @@ body {
 .site-nav-link.is-active::after {
     position: absolute;
     right: 0;
-    bottom: 0;
+    bottom: -1px;
     left: 0;
     height: 2px;
     background: #df6048;
@@ -388,7 +392,7 @@ body {
     outline-offset: 3px;
 }
 
-@media (max-width: 820px) {
+@media (max-width: 960px) {
     .site-navbar-inner {
         position: relative;
         grid-template-columns: minmax(0, 1fr) auto;
@@ -427,6 +431,7 @@ body {
         right: 0;
         left: 0;
         display: none;
+        width: auto;
         z-index: 1;
         align-items: stretch;
         flex-direction: column;
@@ -435,6 +440,7 @@ body {
         border: 1px solid #e8e1d9;
         border-radius: 0 0 1rem 1rem;
         background: #fffdf9;
+        justify-self: stretch;
     }
 
     .site-navbar-menu.is-open {
