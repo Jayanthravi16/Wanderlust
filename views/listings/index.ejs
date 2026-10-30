@@ -1,7 +1,26 @@
 <% layout("/layouts/boilerplate") %>
 <body>
 
-    <h3 class="listings-heading">All Listings</h3>
+    <!-- <h3 class="listings-heading">All Listings</h3> -->
+
+    <nav class="category-filter" aria-label="Filter listings by category">
+        <div class="category-filter-track">
+            <a class="category-filter-item <%= selectedCategory === 'all' ? 'is-selected' : '' %>"
+               href="/listings"
+               <% if (selectedCategory === 'all') { %>aria-current="page"<% } %>>
+                <i class="fa-solid fa-compass" aria-hidden="true"></i>
+                <span>All</span>
+            </a>
+            <% for (const category of listingCategories) { %>
+                <a class="category-filter-item <%= selectedCategory === category.value ? 'is-selected' : '' %>"
+                   href="/listings?category=<%= encodeURIComponent(category.value) %>"
+                   <% if (selectedCategory === category.value) { %>aria-current="page"<% } %>>
+                    <i class="<%= category.icon %>" aria-hidden="true"></i>
+                    <span><%= category.label %></span>
+                </a>
+            <% } %>
+        </div>
+    </nav>
 
     <div class="listings-grid">
         <% for (let listing of allListings){ %> 
@@ -16,5 +35,8 @@
             </a>
         <% } %>
     </div>
+    <% if (allListings.length === 0) { %>
+        <p class="listings-empty-state">No listings found in this category yet.</p>
+    <% } %>
 
 </body>

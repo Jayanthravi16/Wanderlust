@@ -1,18 +1,23 @@
 const Listing = require('../models/listing');
 const Review = require('../models/review.js');
 const ExpressError = require('../utils/ExpressError.js');
+const listingCategories = require('../utils/listingCategories.js');
 
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapToken = process.env.MAP_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken});
 
 module.exports.index = async (req, res) => {
-  const allListings = await Listing.find({});
-  res.render("./listings/index.ejs", { allListings });
+  const selectedCategory = listingCategories.some(({ value }) => value === req.query.category)
+    ? req.query.category
+    : "all";
+  const query = selectedCategory === "all" ? {} : { category: selectedCategory };
+  const allListings = await Listing.find(query);
+  res.render("./listings/index.ejs", { allListings, listingCategories, selectedCategory });
 };
 
 module.exports.renderNewForm = (req, res) => {
-  res.render("./listings/new.ejs");
+  res.render("./listings/new.ejs", { listingCategories });
 };
 
 module.exports.showListing = async (req, res) => {
@@ -53,7 +58,7 @@ module.exports.createListing = async (req, res) => {
 module.exports.renderEditForm = async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
-    res.render("./listings/edit.ejs", { listing });
+    res.render("./listings/edit.ejs", { listing, listingCategories });
 };
 
 module.exports.updateListing = async (req, res) => {

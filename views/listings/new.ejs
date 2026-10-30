@@ -14,6 +14,16 @@
                 <div class="invalid-feedback">Please enter a description.</div>
             </div>
             <div class="listing-field">
+                <label for="listing-category" class="listing-label">Category</label>
+                <select id="listing-category" name="listing[category]" class="form-select listing-input" required>
+                    <option value="" selected disabled>Choose a category</option>
+                    <% for (const category of listingCategories) { %>
+                        <option value="<%= category.value %>"><%= category.label %></option>
+                    <% } %>
+                </select>
+                <div class="invalid-feedback">Please choose a category.</div>
+            </div>
+            <div class="listing-field">
                 <label for="listing-image" class="listing-label">Upload Image</label>
                 <input id="listing-image" type="file" name="listing[image]" accept="image/jpeg,image/png,image/gif,image/webp,image/avif" class="form-control listing-input" required>
                 <div class="invalid-feedback">Please upload a JPEG, PNG, GIF, WebP, or AVIF image (5 MB maximum).</div>

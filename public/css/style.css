@@ -437,6 +437,72 @@ body {
     text-align: center;
 }
 
+.category-filter {
+    overflow-x: auto;
+    margin: 0 auto 1.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: #b8b2aa transparent;
+}
+
+.category-filter-track {
+    display: flex;
+    width: max-content;
+    min-width: 100%;
+    justify-content: center;
+    gap: clamp(1.1rem, 2.5vw, 2rem);
+    padding: 0.25rem 0.25rem 0.75rem;
+}
+
+.category-filter-item {
+    display: flex;
+    min-width: 4.5rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.5rem 0.4rem 0.6rem;
+    border-bottom: 2px solid transparent;
+    color: #77736e;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.category-filter-item i {
+    font-size: 1.2rem;
+}
+
+.category-filter-item:hover,
+.category-filter-item:focus-visible {
+    color: #292521;
+    transform: translateY(-2px);
+}
+
+.category-filter-item.is-selected {
+    border-bottom-color: #25221f;
+    color: #25221f;
+}
+
+.category-filter-item:focus-visible {
+    outline: 2px solid #df6048;
+    outline-offset: 3px;
+}
+
+.listings-empty-state {
+    margin: 2rem 0;
+    color: #77736e;
+    text-align: center;
+}
+
+@media (max-width: 40rem) {
+    .category-filter-track {
+        min-width: max-content;
+        justify-content: flex-start;
+    }
+}
+
 .listings-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 20rem));

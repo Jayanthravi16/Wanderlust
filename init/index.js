@@ -1,9 +1,19 @@
+require("dotenv").config();
+
 const mongoose = require("mongoose");
 const initData = require("./data.js");
 const Listing = require("../models/listing.js");
 const User = require("../models/user.js");
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const mapToken = process.env.MAP_TOKEN;
+
+if (!mapToken) {
+    throw new Error("Cannot seed listings: MAP_TOKEN is not configured");
+}
+
+const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
 async function main(){
     await mongoose.connect(MONGO_URL);
@@ -11,10 +21,26 @@ async function main(){
     if (!owner) {
         throw new Error('Cannot seed listings: user "student3" was not found');
     }
+
+    const listings = [];
+    for (const listing of initData.data) {
+        const response = await geocodingClient.forwardGeocode({
+            query: `${listing.location}, ${listing.country}`,
+            limit: 1,
+        }).send();
+        const geometry = response.body.features[0]?.geometry;
+        if (!geometry) {
+            throw new Error(`Cannot seed listing "${listing.title}": location could not be geocoded`);
+        }
+
+        const preparedListing = { ...listing, owner: owner._id, geometry };
+        await new Listing(preparedListing).validate();
+        listings.push(preparedListing);
+    }
+
     await Listing.deleteMany({});
-    const listings = initData.data.map((obj) => ({ ...obj, owner: owner._id }));
     await Listing.insertMany(listings);
-    console.log("Data was initialized");
+    console.log(`Initialized ${listings.length} listings`);
 }
 
 main()
