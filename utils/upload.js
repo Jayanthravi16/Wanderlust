@@ -1,10 +1,8 @@
 const crypto = require("crypto");
-const fs = require("fs");
-const path = require("path");
 const multer = require("multer");
+const { createClient } = require("@supabase/supabase-js");
 const ExpressError = require("./ExpressError.js");
 
-const uploadsDirectory = path.join(__dirname, "..", "uploads");
 const imageExtensions = {
   "image/avif": ".avif",
   "image/gif": ".gif",
@@ -13,23 +11,30 @@ const imageExtensions = {
   "image/webp": ".webp",
 };
 
-fs.mkdirSync(uploadsDirectory, { recursive: true });
+const allowedImageTypes = new Set(Object.keys(imageExtensions));
+const bucketName = process.env.SUPABASE_STORAGE_BUCKET || "listing-images";
+let supabase;
 
-const allowedImageTypes = new Set([
-  "image/avif",
-  "image/gif",
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-]);
+function getSupabaseClient() {
+  const { SUPABASE_URL } = process.env;
+  const serverKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!SUPABASE_URL || !serverKey) {
+    throw new ExpressError(
+      503,
+      "Image storage is not configured. Set SUPABASE_URL and SUPABASE_SECRET_KEY.",
+    );
+  }
+
+  if (!supabase) {
+    supabase = createClient(SUPABASE_URL, serverKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    });
+  }
+  return supabase;
+}
 
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: uploadsDirectory,
-    filename: (req, file, callback) => {
-      callback(null, `${crypto.randomUUID()}${imageExtensions[file.mimetype]}`);
-    },
-  }),
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, callback) => {
     if (!allowedImageTypes.has(file.mimetype)) {
@@ -54,13 +59,46 @@ module.exports.uploadListingImage = (req, res, next) => {
   });
 };
 
-module.exports.setListingImage = (req, res, next) => {
-  if (req.file) {
-    req.body.listing ||= {};
-    req.body.listing.image = {
-      filename: req.file.filename,
-      url: `/uploads/${req.file.filename}`,
-    };
+module.exports.setListingImage = async (req, res, next) => {
+  if (!req.file) {
+    return next();
   }
-  next();
+
+  const filename = `listings/${crypto.randomUUID()}${imageExtensions[req.file.mimetype]}`;
+  try {
+    const client = getSupabaseClient();
+    const { error } = await client.storage
+      .from(bucketName)
+      .upload(filename, req.file.buffer, {
+        cacheControl: "3600",
+        contentType: req.file.mimetype,
+        upsert: false,
+      });
+
+    if (error) {
+      console.error("Supabase listing image upload failed:", error.message);
+      return next(new ExpressError(502, "Could not upload the listing image to Supabase Storage."));
+    }
+
+    const { data } = client.storage.from(bucketName).getPublicUrl(filename);
+    req.body.listing ||= {};
+    req.body.listing.image = { filename, url: data.publicUrl };
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.deleteListingImage = async (filename) => {
+  if (typeof filename !== "string" || !filename.startsWith("listings/")) {
+    return;
+  }
+
+  const { error } = await getSupabaseClient().storage
+    .from(bucketName)
+    .remove([filename]);
+  if (error) {
+    console.error("Supabase listing image deletion failed:", error.message);
+    throw new ExpressError(502, "Could not remove the listing image from Supabase Storage.");
+  }
 };

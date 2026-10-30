@@ -31,8 +31,8 @@ router.route("/")
       }
       next();
     },
-    setListingImage,
     validateListing,
+    setListingImage,
     wrapAsync(listingController.createListing),
   );
 
@@ -51,8 +51,8 @@ router.route("/:id")
     isLoggedIn,
     isListingOwner,
     uploadListingImage,
-    setListingImage,
     validateListing,
+    setListingImage,
     wrapAsync(listingController.updateListing),
   )
   .delete(

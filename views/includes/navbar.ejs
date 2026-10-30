@@ -5,6 +5,26 @@
             <span>WanderLust</span>
         </a>
 
+        <form class="site-search" action="/listings" method="get" role="search">
+            <label class="visually-hidden" for="site-search-input">Search stays by name or destination</label>
+            <i class="fa-solid fa-magnifying-glass site-search-icon" aria-hidden="true"></i>
+            <input
+                id="site-search-input"
+                class="site-search-input"
+                type="search"
+                name="q"
+                value="<%= searchTerm %>"
+                placeholder="Search stays or destinations"
+                autocomplete="off"
+            >
+            <% if (currentPath === "/listings" && selectedCategory && selectedCategory !== "all") { %>
+                <input type="hidden" name="category" value="<%= selectedCategory %>">
+            <% } %>
+            <button class="site-search-submit" type="submit" aria-label="Search stays">
+                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </button>
+        </form>
+
         <button
             class="site-menu-toggle"
             type="button"

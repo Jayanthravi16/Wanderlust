@@ -13,6 +13,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const User = require("./models/user.js");
+const { normalizeSearchTerm } = require("./utils/listingSearch.js");
 
 
 const listingsRouter = require("./routes/listing.js");
@@ -72,6 +73,7 @@ app.use((req, res, next)=>{
   res.locals.error = req.flash("error");
   res.locals.currUser = req.user;
   res.locals.currentPath = req.path;
+  res.locals.searchTerm = normalizeSearchTerm(req.query.q);
   next();
 });
 

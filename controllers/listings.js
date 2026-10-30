@@ -2,6 +2,8 @@ const Listing = require('../models/listing');
 const Review = require('../models/review.js');
 const ExpressError = require('../utils/ExpressError.js');
 const listingCategories = require('../utils/listingCategories.js');
+const { buildListingSearchQuery } = require('../utils/listingSearch.js');
+const { deleteListingImage } = require('../utils/upload.js');
 
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapToken = process.env.MAP_TOKEN;
@@ -11,9 +13,9 @@ module.exports.index = async (req, res) => {
   const selectedCategory = listingCategories.some(({ value }) => value === req.query.category)
     ? req.query.category
     : "all";
-  const query = selectedCategory === "all" ? {} : { category: selectedCategory };
+  const { query, searchTerm } = buildListingSearchQuery(req.query.q, selectedCategory);
   const allListings = await Listing.find(query);
-  res.render("./listings/index.ejs", { allListings, listingCategories, selectedCategory });
+  res.render("./listings/index.ejs", { allListings, listingCategories, selectedCategory, searchTerm });
 };
 
 module.exports.renderNewForm = (req, res) => {
@@ -66,12 +68,16 @@ module.exports.updateListing = async (req, res) => {
     if (!req.body.listing) {
       throw new ExpressError(400, "Send Valid Data for Listing");
     }
+    const listing = await Listing.findOne({ _id: id, owner: req.user._id });
     const updatedListing = await Listing.findOneAndUpdate(
       { _id: id, owner: req.user._id },
       { ...req.body.listing },
       { new: true },
     );
     if (updatedListing) {
+      if (req.file && listing?.image?.filename) {
+        await deleteListingImage(listing.image.filename);
+      }
       req.flash("success", "Listing Successfully Updated ");
       console.log(`Listing updated: ${updatedListing._id}`);
     } else {
@@ -86,6 +92,7 @@ module.exports.destroyListing = async (req, res) => {
   const deletedListing = await Listing.findOneAndDelete({ _id: id, owner: req.user._id });
   if (deletedListing) {
     await Review.deleteMany({ _id: { $in: deletedListing.reviews } });
+    await deleteListingImage(deletedListing.image?.filename);
     req.flash("success", "Listing Deleted");
     console.log(`Listing deleted: ${deletedListing._id}`);
   } else {
