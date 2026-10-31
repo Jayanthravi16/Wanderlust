@@ -59,14 +59,18 @@
 
             <div class="site-nav-account">
                 <% if (currUser) { %>
-                    <span
-                        class="site-profile-avatar"
-                        data-username="<%= currUser.username %>"
-                        title="Signed in as <%= currUser.username %>"
-                        aria-label="Signed in as <%= currUser.username %>"
-                        role="img"
-                        tabindex="0"
-                    ><%= currUser.username.charAt(0).toUpperCase() %></span>
+                    <div class="site-profile-menu">
+                        <a
+                            class="site-profile-avatar"
+                            href="/account"
+                            title="Manage profile for <%= currUser.username %>"
+                            aria-label="Manage profile for <%= currUser.username %>"
+                        ><%= currUser.username.charAt(0).toUpperCase() %></a>
+                        <div class="site-profile-dropdown">
+                            <span class="site-profile-dropdown-name"><%= currUser.username %></span>
+                            <a href="/account" <% if (currentPath === "/account") { %>aria-current="page"<% } %>>Manage profile</a>
+                        </div>
+                    </div>
                     <form action="/logout" method="post">
                         <button class="site-account-button site-logout-button" type="submit">Log out</button>
                     </form>

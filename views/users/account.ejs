@@ -1,0 +1,78 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<main class="listing-form-page account-page">
+    <h1 class="listing-form-heading">Manage profile</h1>
+    <p class="signup-intro">Update your password or manage your WanderLust account.</p>
+
+    <section class="account-section">
+        <h2 class="account-section-heading">Profile details</h2>
+        <dl class="account-details">
+            <div>
+                <dt>Username</dt>
+                <dd><%= currUser.username %></dd>
+            </div>
+            <div>
+                <dt>Email</dt>
+                <dd><%= currUser.email %></dd>
+            </div>
+        </dl>
+    </section>
+
+    <section class="account-section">
+        <h2 class="account-section-heading">Change password</h2>
+        <form action="/account/password" method="post" class="listing-form needs-validation" novalidate>
+            <div class="listing-field">
+                <label for="currentPassword" class="listing-label">Current password</label>
+                <input
+                    type="password"
+                    name="currentPassword"
+                    id="currentPassword"
+                    class="form-control listing-input"
+                    autocomplete="current-password"
+                    required
+                >
+                <div class="invalid-feedback">Enter your current password.</div>
+            </div>
+
+            <div class="listing-field">
+                <label for="newPassword" class="listing-label">New password</label>
+                <input
+                    type="password"
+                    name="newPassword"
+                    id="newPassword"
+                    class="form-control listing-input"
+                    autocomplete="new-password"
+                    required
+                >
+                <div class="invalid-feedback">Enter a new password.</div>
+            </div>
+
+            <div class="listing-field">
+                <label for="confirmPassword" class="listing-label">Confirm new password</label>
+                <input
+                    type="password"
+                    name="confirmPassword"
+                    id="confirmPassword"
+                    class="form-control listing-input"
+                    autocomplete="new-password"
+                    required
+                >
+                <div class="invalid-feedback">Confirm your new password.</div>
+            </div>
+
+            <button class="listing-submit" type="submit">Change password</button>
+        </form>
+    </section>
+
+    <section class="account-danger-zone">
+        <h2 class="account-section-heading">Delete account</h2>
+        <p>Deleting your account permanently removes your listings and reviews. This cannot be undone.</p>
+        <form
+            action="/account?_method=DELETE"
+            method="post"
+            onsubmit="return confirm('Delete your account and permanently remove your listings and reviews? This cannot be undone.');"
+        >
+            <button class="account-delete-button" type="submit">Delete my account</button>
+        </form>
+    </section>
+</main>
