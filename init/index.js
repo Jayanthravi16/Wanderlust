@@ -1,4 +1,5 @@
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 const mongoose = require("mongoose");
 const initData = require("./data.js");
@@ -6,8 +7,12 @@ const Listing = require("../models/listing.js");
 const User = require("../models/user.js");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const MONGO_URL = process.env.MONGODB_URL;
 const mapToken = process.env.MAP_TOKEN;
+
+if (!MONGO_URL) {
+    throw new Error("Cannot seed listings: MONGODB_URL is not configured");
+}
 
 if (!mapToken) {
     throw new Error("Cannot seed listings: MAP_TOKEN is not configured");

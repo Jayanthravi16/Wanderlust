@@ -13,7 +13,7 @@
                 class="site-search-input"
                 type="search"
                 name="q"
-                value="<%= searchTerm %>"
+                value="<%= locals.searchTerm %>"
                 placeholder="Search stays or destinations"
                 autocomplete="off"
             >
@@ -61,8 +61,11 @@
                 <% if (currUser) { %>
                     <span
                         class="site-profile-avatar"
+                        data-username="<%= currUser.username %>"
                         title="Signed in as <%= currUser.username %>"
                         aria-label="Signed in as <%= currUser.username %>"
+                        role="img"
+                        tabindex="0"
                     ><%= currUser.username.charAt(0).toUpperCase() %></span>
                     <form action="/logout" method="post">
                         <button class="site-account-button site-logout-button" type="submit">Log out</button>
