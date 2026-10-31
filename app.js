@@ -3,7 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const port = 8080;
+const port = process.env.PORT || 8080;
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
@@ -30,21 +30,17 @@ app.engine("ejs", ejsMate); // <-- 2. Set ejs-mate as the engine
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-const dbUrl = process.env.MONGODB_URL;
-// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const dbUrl = process.env.MONGODB_URL?.trim();
+const sessionSecret = process.env.SECRET;
 
-main()
-  .then(() => {
-    console.log("Connected to DB");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+if (!dbUrl || !/^mongodb(?:\+srv)?:\/\//i.test(dbUrl)) {
+  throw new Error("MONGODB_URL must be set to a valid mongodb:// or mongodb+srv:// connection string");
+}
+if (!sessionSecret) {
+  throw new Error("SECRET is not configured");
+}
 
 async function main() {
-    if (!dbUrl) {
-    throw new Error("MONGODB_URL is not configured");
-  }
   await mongoose.connect(dbUrl);
 }
 
@@ -52,7 +48,7 @@ const store = MongoStore.create({
   mongoUrl: dbUrl,
   // mongoOptions: advancedOptions,
   crypto : {
-    secret : process.env.SECRET,
+    secret : sessionSecret,
   },
   touchAfter : 24*60*60,
 });
@@ -63,7 +59,7 @@ store.on("error", (err) => {
 
 const sessionOptions = {
   store,
-  secret : process.env.SECRET,
+  secret : sessionSecret,
   resave : false,
   saveUninitialized : true,
   cookie: {
@@ -129,6 +125,14 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("error.ejs", { statusCode, message });
 });
 
-app.listen(port, () => {
-  console.log(`Server is listening to port : ${port}`);
-});
+main()
+  .then(() => {
+    console.log("Connected to DB");
+    app.listen(port, () => {
+      console.log(`Server is listening to port : ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to start server:", err);
+    process.exit(1);
+  });
