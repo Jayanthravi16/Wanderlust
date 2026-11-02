@@ -67,12 +67,30 @@
     <section class="account-danger-zone">
         <h2 class="account-section-heading">Delete account</h2>
         <p>Deleting your account permanently removes your listings and reviews. This cannot be undone.</p>
-        <form
-            action="/account?_method=DELETE"
-            method="post"
-            onsubmit="return confirm('Delete your account and permanently remove your listings and reviews? This cannot be undone.');"
-        >
-            <button class="account-delete-button" type="submit">Delete my account</button>
-        </form>
+        <button class="account-delete-button" id="delete-account-open" type="button">Delete my account</button>
     </section>
+
+    <dialog class="account-delete-dialog" id="delete-account-dialog" aria-labelledby="delete-account-heading" aria-describedby="delete-account-warning">
+        <form action="/account?_method=DELETE" method="post" class="account-delete-form">
+            <h2 class="account-section-heading" id="delete-account-heading">Permanently delete your account?</h2>
+            <p id="delete-account-warning">Your listings, reviews, and all other account data will be permanently deleted and cannot be recovered.</p>
+
+            <div class="listing-field">
+                <label for="delete-account-password" class="listing-label">Current password</label>
+                <input
+                    type="password"
+                    name="password"
+                    id="delete-account-password"
+                    class="form-control listing-input"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <div class="account-delete-dialog-actions">
+                <button class="account-delete-cancel" type="button" id="delete-account-cancel">Cancel</button>
+                <button class="account-delete-button" type="submit">Permanently delete account</button>
+            </div>
+        </form>
+    </dialog>
 </main>

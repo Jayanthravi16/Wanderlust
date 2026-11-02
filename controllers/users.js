@@ -94,6 +94,18 @@ module.exports.logout = (req, res, next) => {
 };
 
 module.exports.deleteAccount = async (req, res, next) => {
+    const { password } = req.body;
+    if (typeof password !== "string" || !password) {
+        req.flash("error", "Enter your current password to delete your account.");
+        return res.redirect("/account");
+    }
+
+    const { user } = await req.user.authenticate(password);
+    if (!user) {
+        req.flash("error", "Your current password is incorrect.");
+        return res.redirect("/account");
+    }
+
     const userId = req.user._id;
     const ownedListings = await Listing.find({ owner: userId })
         .select("_id image.filename reviews");

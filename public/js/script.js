@@ -15,6 +15,27 @@
     })
   }
 
+  const deleteAccountOpen = document.querySelector('#delete-account-open')
+  const deleteAccountDialog = document.querySelector('#delete-account-dialog')
+  const deleteAccountCancel = document.querySelector('#delete-account-cancel')
+  const deleteAccountPassword = document.querySelector('#delete-account-password')
+
+  if (deleteAccountOpen && deleteAccountDialog && deleteAccountCancel && deleteAccountPassword) {
+    deleteAccountOpen.addEventListener('click', () => {
+      deleteAccountDialog.showModal()
+      deleteAccountPassword.focus()
+    })
+
+    deleteAccountCancel.addEventListener('click', () => {
+      deleteAccountDialog.close()
+      deleteAccountOpen.focus()
+    })
+
+    deleteAccountDialog.addEventListener('close', () => {
+      deleteAccountPassword.value = ''
+    })
+  }
+
   forms.forEach(form => {
     const controls = form.querySelectorAll('input, select, textarea')
 
