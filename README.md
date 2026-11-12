@@ -8,6 +8,10 @@ A travel-stay discovery and listing app for exploring distinctive places, sharin
 
 <br>
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Explore%20WanderLust-ff385c?style=for-the-badge)](https://wanderlust-89ot.onrender.com/)
+
+<br>
+
 ![Node.js](https://img.shields.io/badge/Node.js-24.21.0-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-5-000000?style=for-the-badge&logo=express&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
@@ -20,6 +24,16 @@ A travel-stay discovery and listing app for exploring distinctive places, sharin
 </div>
 
 ---
+
+## 🌐 Live demo
+
+**WanderLust is hosted on Render.** Explore stays, search destinations, browse categories, and view listing details in the live app.
+
+<div align="center">
+
+### [🚀 Open the WanderLust live demo](https://wanderlust-89ot.onrender.com/)
+
+</div>
 
 ## ✨ The idea
 
